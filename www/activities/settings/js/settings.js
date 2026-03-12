@@ -119,6 +119,45 @@ app.Settings = {
       }
     });
 
+    // Health Connect toggle
+    let healthConnectToggle = document.getElementById("health-connect-toggle");
+    if (healthConnectToggle) {
+      healthConnectToggle.checked = app.Settings.get("integration", "health-connect") === true;
+      healthConnectToggle.addEventListener("change", async function(e) {
+        if (e.target.checked) {
+          if (window.cordova && cordova.plugins && cordova.plugins.healthConnect) {
+            try {
+              let availResult = await new Promise(function(resolve, reject) {
+                cordova.plugins.healthConnect.isAvailable(resolve, reject);
+              });
+              if (!availResult || !availResult.available) {
+                e.target.checked = false;
+                app.Utils.toast("Health Connect is not available on this device");
+                return;
+              }
+              let permResult = await new Promise(function(resolve, reject) {
+                cordova.plugins.healthConnect.requestPermission(resolve, reject);
+              });
+              if (!permResult || !permResult.granted) {
+                e.target.checked = false;
+                app.Utils.toast("Health Connect permission not granted");
+                return;
+              }
+            } catch (err) {
+              e.target.checked = false;
+              app.Utils.toast("Health Connect is not available");
+              return;
+            }
+          } else {
+            e.target.checked = false;
+            app.Utils.toast("Health Connect is not available on this platform");
+            return;
+          }
+        }
+        app.Settings.put("integration", "health-connect", e.target.checked);
+      });
+    }
+
     // Open Food Facts credentials login button
     let offLogin = document.getElementById("off-login");
     if (offLogin) {
@@ -758,6 +797,7 @@ app.Settings = {
         "barcode-flashlight": false,
         "barcode-sound": false,
         "edit-images": false,
+        "health-connect": false,
         "search-language": "Default",
         "search-country": "All",
         "upload-country": "Auto",

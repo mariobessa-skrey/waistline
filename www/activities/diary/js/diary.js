@@ -562,6 +562,7 @@ app.Diary = {
             app.Diary.addItemToEntry(x, category, entry);
           });
           await dbHandler.put(entry, "diary");
+          app.HealthConnect.syncDiaryEntry(entry);
         }
 
         resolve();
@@ -665,6 +666,7 @@ app.Diary = {
     } else {
       // No more items to process -> write entry to DB and render
       await dbHandler.put(entry, "diary");
+      app.HealthConnect.syncDiaryEntry(entry);
       if (renderAfterwards) {
         let scrollPosition = { category: category };
         app.Diary.render(scrollPosition);
@@ -690,6 +692,7 @@ app.Diary = {
         entry.items.splice(item.index, 1, updatedItem);
 
         await dbHandler.put(entry, "diary");
+        app.HealthConnect.syncDiaryEntry(entry);
 
         resolve();
       } else {
@@ -721,6 +724,7 @@ app.Diary = {
               entry.items.splice(item.index, 1);
 
             await dbHandler.put(entry, "diary");
+            app.HealthConnect.syncDiaryEntry(entry);
             let scrollPosition = { position: $(".page-current .page-content").scrollTop() };
             app.Diary.render(scrollPosition);
           }
@@ -809,6 +813,7 @@ app.Diary = {
                 entry.items.push(item);
 
                 await dbHandler.put(entry, "diary");
+                app.HealthConnect.syncDiaryEntry(entry);
                 let scrollPosition = { category: category };
                 app.Diary.render(scrollPosition);
               }
