@@ -563,6 +563,7 @@ app.Diary = {
           });
           await dbHandler.put(entry, "diary");
           app.HealthConnect.syncDiaryEntry(entry);
+          app.Nightscout.syncDiaryEntry(entry);
         }
 
         resolve();
@@ -667,6 +668,7 @@ app.Diary = {
       // No more items to process -> write entry to DB and render
       await dbHandler.put(entry, "diary");
       app.HealthConnect.syncDiaryEntry(entry);
+      app.Nightscout.syncDiaryEntry(entry);
       if (renderAfterwards) {
         let scrollPosition = { category: category };
         app.Diary.render(scrollPosition);
@@ -693,6 +695,7 @@ app.Diary = {
 
         await dbHandler.put(entry, "diary");
         app.HealthConnect.syncDiaryEntry(entry);
+        app.Nightscout.syncDiaryEntry(entry);
 
         resolve();
       } else {
@@ -725,6 +728,7 @@ app.Diary = {
 
             await dbHandler.put(entry, "diary");
             app.HealthConnect.syncDiaryEntry(entry);
+            app.Nightscout.syncDiaryEntry(entry);
             let scrollPosition = { position: $(".page-current .page-content").scrollTop() };
             app.Diary.render(scrollPosition);
           }
@@ -814,6 +818,7 @@ app.Diary = {
 
                 await dbHandler.put(entry, "diary");
                 app.HealthConnect.syncDiaryEntry(entry);
+                app.Nightscout.syncDiaryEntry(entry);
                 let scrollPosition = { category: category };
                 app.Diary.render(scrollPosition);
               }

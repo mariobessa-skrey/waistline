@@ -158,6 +158,55 @@ app.Settings = {
       });
     }
 
+    // Nightscout toggle
+    let nightscoutToggle = document.getElementById("nightscout-toggle");
+    if (nightscoutToggle) {
+      nightscoutToggle.checked = app.Settings.get("integration", "nightscout-enabled") === true;
+      nightscoutToggle.addEventListener("change", function(e) {
+        if (e.target.checked) {
+          let url = app.Settings.get("integration", "nightscout-url");
+          let secret = app.Settings.get("integration", "nightscout-secret");
+          if (!url || !secret) {
+            e.target.checked = false;
+            app.Utils.toast("Configure Nightscout URL and API Secret first");
+            return;
+          }
+        }
+        app.Settings.put("integration", "nightscout-enabled", e.target.checked);
+      });
+    }
+
+    // Nightscout configuration save
+    let nightscoutSave = document.getElementById("nightscout-save");
+    if (nightscoutSave) {
+      nightscoutSave.addEventListener("click", function(e) {
+        let url = document.getElementById("nightscout-url").value;
+        let secret = document.getElementById("nightscout-secret").value;
+        let debounce = parseInt(document.getElementById("nightscout-debounce").value) || 30;
+        if (debounce < 5) debounce = 5;
+        if (debounce > 300) debounce = 300;
+        app.Settings.put("integration", "nightscout-url", url);
+        app.Settings.put("integration", "nightscout-secret", secret);
+        app.Settings.put("integration", "nightscout-debounce", debounce);
+        app.Utils.toast("Nightscout settings saved");
+      });
+    }
+
+    // Restore Nightscout config inputs
+    let nightscoutUrl = document.getElementById("nightscout-url");
+    if (nightscoutUrl) {
+      nightscoutUrl.value = app.Settings.get("integration", "nightscout-url") || "";
+    }
+    let nightscoutSecret = document.getElementById("nightscout-secret");
+    if (nightscoutSecret) {
+      let secret = app.Settings.get("integration", "nightscout-secret") || "";
+      nightscoutSecret.value = secret;
+    }
+    let nightscoutDebounce = document.getElementById("nightscout-debounce");
+    if (nightscoutDebounce) {
+      nightscoutDebounce.value = app.Settings.get("integration", "nightscout-debounce") || 30;
+    }
+
     // Open Food Facts credentials login button
     let offLogin = document.getElementById("off-login");
     if (offLogin) {
@@ -798,6 +847,10 @@ app.Settings = {
         "barcode-sound": false,
         "edit-images": false,
         "health-connect": false,
+        "nightscout-enabled": false,
+        "nightscout-url": "",
+        "nightscout-secret": "",
+        "nightscout-debounce": 30,
         "search-language": "Default",
         "search-country": "All",
         "upload-country": "Auto",

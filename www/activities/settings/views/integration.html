@@ -825,6 +825,28 @@
           </div>
         </li>
 
+        <li class="item-divider">Nightscout</li>
+
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="item-title">Sync meals to Nightscout</div>
+              <div class="item-after">
+                <label class="toggle toggle-init">
+                  <input type="checkbox" class="manual-bind" id="nightscout-toggle" field="integration" name="nightscout-enabled" />
+                  <span class="toggle-icon"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <a href="#" class="item-link item-content login-screen-open" data-login-screen=".nightscout-login">
+            <div class="item-inner">Nightscout Configuration</div>
+          </a>
+        </li>
+
         <li class="item-divider" data-localize="settings.integration.usda-title">U.S. DEPARTMENT OF AGRICULTURE</li>
 
         <li>
@@ -885,6 +907,56 @@
               <div class="block-footer">
                 <p data-localize="settings.integration.off-account-note">This is entirely optional. You do not need an OFF account to use the app.</p>
                 <p><a class="link login-screen-close" href="#" data-localize="settings.integration.exit">Exit</a></p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nightscout Configuration Screen -->
+  <div class="login-screen nightscout-login">
+    <div class="view">
+      <div class="page">
+        <div class="page-content login-screen-content">
+          <div class="login-screen-title">Nightscout</div>
+          <form>
+            <div class="list">
+              <ul>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Nightscout URL</div>
+                    <div class="item-input-wrap">
+                      <input class="manual-bind" id="nightscout-url" type="url" name="nightscout-url" field="integration" placeholder="https://your-site.herokuapp.com">
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">API Secret</div>
+                    <div class="item-input-wrap">
+                      <input class="manual-bind" id="nightscout-secret" type="password" name="nightscout-secret" field="integration">
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Sync Delay (seconds)</div>
+                    <div class="item-input-wrap">
+                      <input class="manual-bind" id="nightscout-debounce" type="number" name="nightscout-debounce" field="integration" min="5" max="300" value="30">
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list">
+              <ul>
+                <li><a class="list-button" id="nightscout-save" href="#">Save</a></li>
+              </ul>
+              <div class="block-footer">
+                <p>Enter your Nightscout site URL and API Secret. The sync delay controls how long Waistline waits after your last edit before sending meal data to Nightscout.</p>
+                <p><a class="link login-screen-close" href="#">Exit</a></p>
               </div>
             </div>
           </form>
