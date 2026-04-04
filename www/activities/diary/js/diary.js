@@ -564,6 +564,7 @@ app.Diary = {
           await dbHandler.put(entry, "diary");
           app.HealthConnect.syncDiaryEntry(entry);
           app.Nightscout.syncDiaryEntry(entry);
+          app.XDrip.syncDiaryEntry(entry);
         }
 
         resolve();
@@ -669,6 +670,7 @@ app.Diary = {
       await dbHandler.put(entry, "diary");
       app.HealthConnect.syncDiaryEntry(entry);
       app.Nightscout.syncDiaryEntry(entry);
+      app.XDrip.syncDiaryEntry(entry);
       if (renderAfterwards) {
         let scrollPosition = { category: category };
         app.Diary.render(scrollPosition);
@@ -696,6 +698,7 @@ app.Diary = {
         await dbHandler.put(entry, "diary");
         app.HealthConnect.syncDiaryEntry(entry);
         app.Nightscout.syncDiaryEntry(entry);
+        app.XDrip.syncDiaryEntry(entry);
 
         resolve();
       } else {
@@ -729,6 +732,7 @@ app.Diary = {
             await dbHandler.put(entry, "diary");
             app.HealthConnect.syncDiaryEntry(entry);
             app.Nightscout.syncDiaryEntry(entry);
+          app.XDrip.syncDiaryEntry(entry);
             let scrollPosition = { position: $(".page-current .page-content").scrollTop() };
             app.Diary.render(scrollPosition);
           }
@@ -819,6 +823,7 @@ app.Diary = {
                 await dbHandler.put(entry, "diary");
                 app.HealthConnect.syncDiaryEntry(entry);
                 app.Nightscout.syncDiaryEntry(entry);
+          app.XDrip.syncDiaryEntry(entry);
                 let scrollPosition = { category: category };
                 app.Diary.render(scrollPosition);
               }

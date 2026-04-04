@@ -127,7 +127,8 @@ app.Nightscout = {
 
       // Calculate nutrition for this meal
       let nutrition = await app.FoodsMealsRecipes.getTotalNutrition(items, "ignore");
-      let carbs = Math.round((nutrition.carbohydrates || 0) * 100) / 100;
+      let excludeCarbs = app.Settings.get("integration", "xdrip-exclude-carbs") === true;
+      let carbs = excludeCarbs ? 0 : Math.round((nutrition.carbohydrates || 0) * 100) / 100;
       let protein = Math.round((nutrition.proteins || 0) * 100) / 100;
       let fat = Math.round((nutrition.fat || 0) * 100) / 100;
       let calories = Math.round(nutrition.calories || 0);

@@ -207,6 +207,33 @@ app.Settings = {
       nightscoutDebounce.value = app.Settings.get("integration", "nightscout-debounce") || 30;
     }
 
+    // xDrip+ toggle
+    let xdripToggle = document.getElementById("xdrip-toggle");
+    if (xdripToggle) {
+      xdripToggle.checked = app.Settings.get("integration", "xdrip-enabled") === true;
+      xdripToggle.addEventListener("change", function(e) {
+        if (e.target.checked) {
+          if (!window.cordova || !cordova.plugins || !cordova.plugins.xdrip) {
+            e.target.checked = false;
+            app.Utils.toast("xDrip+ integration is not available on this platform");
+            return;
+          }
+          // Register with xDrip+ broadcast service
+          cordova.plugins.xdrip.register(function() {}, function() {});
+        }
+        app.Settings.put("integration", "xdrip-enabled", e.target.checked);
+      });
+    }
+
+    // xDrip+ exclude carbs from Nightscout toggle
+    let xdripExcludeCarbsToggle = document.getElementById("xdrip-exclude-carbs-toggle");
+    if (xdripExcludeCarbsToggle) {
+      xdripExcludeCarbsToggle.checked = app.Settings.get("integration", "xdrip-exclude-carbs") === true;
+      xdripExcludeCarbsToggle.addEventListener("change", function(e) {
+        app.Settings.put("integration", "xdrip-exclude-carbs", e.target.checked);
+      });
+    }
+
     // Open Food Facts credentials login button
     let offLogin = document.getElementById("off-login");
     if (offLogin) {
@@ -851,6 +878,8 @@ app.Settings = {
         "nightscout-url": "",
         "nightscout-secret": "",
         "nightscout-debounce": 30,
+        "xdrip-enabled": false,
+        "xdrip-exclude-carbs": false,
         "search-language": "Default",
         "search-country": "All",
         "upload-country": "Auto",
