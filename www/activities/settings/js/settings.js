@@ -182,12 +182,8 @@ app.Settings = {
       nightscoutSave.addEventListener("click", function(e) {
         let url = document.getElementById("nightscout-url").value;
         let secret = document.getElementById("nightscout-secret").value;
-        let debounce = parseInt(document.getElementById("nightscout-debounce").value) || 30;
-        if (debounce < 5) debounce = 5;
-        if (debounce > 300) debounce = 300;
         app.Settings.put("integration", "nightscout-url", url);
         app.Settings.put("integration", "nightscout-secret", secret);
-        app.Settings.put("integration", "nightscout-debounce", debounce);
         app.Utils.toast("Nightscout settings saved");
       });
     }
@@ -202,10 +198,7 @@ app.Settings = {
       let secret = app.Settings.get("integration", "nightscout-secret") || "";
       nightscoutSecret.value = secret;
     }
-    let nightscoutDebounce = document.getElementById("nightscout-debounce");
-    if (nightscoutDebounce) {
-      nightscoutDebounce.value = app.Settings.get("integration", "nightscout-debounce") || 30;
-    }
+
 
     // xDrip+ toggle
     let xdripToggle = document.getElementById("xdrip-toggle");
@@ -877,7 +870,6 @@ app.Settings = {
         "nightscout-enabled": false,
         "nightscout-url": "",
         "nightscout-secret": "",
-        "nightscout-debounce": 30,
         "xdrip-enabled": false,
         "xdrip-exclude-carbs": false,
         "search-language": "Default",

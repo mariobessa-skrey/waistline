@@ -19,8 +19,6 @@
 
 app.Nightscout = {
 
-  _timers: {},
-
   isEnabled: function() {
     return app.Settings.get("integration", "nightscout-enabled") === true;
   },
@@ -28,8 +26,7 @@ app.Nightscout = {
   getConfig: function() {
     let url = app.Settings.get("integration", "nightscout-url") || "";
     let secret = app.Settings.get("integration", "nightscout-secret") || "";
-    let debounce = parseInt(app.Settings.get("integration", "nightscout-debounce")) || 30;
-    return { url: url.replace(/\/+$/, ""), secret: secret, debounce: debounce };
+    return { url: url.replace(/\/+$/, ""), secret: secret };
   },
 
   sha1: async function(str) {
@@ -40,51 +37,15 @@ app.Nightscout = {
   },
 
   /**
-   * Called from diary mutation points. Groups items by meal category
-   * and schedules a debounced sync for each affected category.
+   * Called from the sync button. Sends meal data for a specific category immediately.
    */
-  syncDiaryEntry: function(entry) {
+  syncMealDirect: function(entry, category) {
     if (!this.isEnabled()) return;
 
     let config = this.getConfig();
     if (!config.url || !config.secret) return;
 
-    // Determine which categories have items
-    let categories = {};
-    if (entry.items) {
-      entry.items.forEach(function(item) {
-        let category = item.category !== undefined ? item.category : 0;
-        categories[category] = true;
-      });
-    }
-
-    // Also include categories that had previous Nightscout IDs (items may have been deleted)
-    if (entry.nightscoutIds) {
-      for (let cat in entry.nightscoutIds) {
-        categories[cat] = true;
-      }
-    }
-
-    // Schedule debounced sync for each category
-    let debounceMs = config.debounce * 1000;
-    for (let category in categories) {
-      this.scheduleMealSync(entry, category, debounceMs);
-    }
-  },
-
-  scheduleMealSync: function(entry, category, debounceMs) {
-    let dateKey = entry.dateTime instanceof Date
-      ? entry.dateTime.toISOString()
-      : new Date(entry.dateTime).toISOString();
-    let key = dateKey + "-" + category;
-
-    if (this._timers[key]) clearTimeout(this._timers[key]);
-
-    let self = this;
-    this._timers[key] = setTimeout(function() {
-      delete self._timers[key];
-      self.writeMealTreatment(entry, parseInt(category));
-    }, debounceMs);
+    this.writeMealTreatment(entry, category);
   },
 
   writeMealTreatment: async function(entry, category) {

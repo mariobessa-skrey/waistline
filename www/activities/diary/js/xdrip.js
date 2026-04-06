@@ -19,52 +19,18 @@
 
 app.XDrip = {
 
-  _timers: {},
-
   isEnabled: function() {
     return app.Settings.get("integration", "xdrip-enabled") === true;
   },
 
   /**
-   * Called from diary mutation points. Groups items by meal category
-   * and schedules a debounced sync for each affected category.
-   * Uses the same debounce timer as Nightscout.
+   * Called from the sync button. Sends carb data for a specific category immediately.
    */
-  syncDiaryEntry: function(entry) {
+  syncMealDirect: function(entry, category) {
     if (!this.isEnabled()) return;
     if (!window.cordova || !cordova.plugins || !cordova.plugins.xdrip) return;
 
-    // Determine which categories have items
-    let categories = {};
-    if (entry.items) {
-      entry.items.forEach(function(item) {
-        let category = item.category !== undefined ? item.category : 0;
-        categories[category] = true;
-      });
-    }
-
-    // Get debounce from Nightscout settings (shared timer)
-    let debounce = parseInt(app.Settings.get("integration", "nightscout-debounce")) || 30;
-    let debounceMs = debounce * 1000;
-
-    for (let category in categories) {
-      this.scheduleMealSync(entry, parseInt(category), debounceMs);
-    }
-  },
-
-  scheduleMealSync: function(entry, category, debounceMs) {
-    let dateKey = entry.dateTime instanceof Date
-      ? entry.dateTime.toISOString()
-      : new Date(entry.dateTime).toISOString();
-    let key = dateKey + "-" + category;
-
-    if (this._timers[key]) clearTimeout(this._timers[key]);
-
-    var self = this;
-    this._timers[key] = setTimeout(function() {
-      delete self._timers[key];
-      self.sendMealTreatment(entry, category);
-    }, debounceMs);
+    this.sendMealTreatment(entry, category);
   },
 
   sendMealTreatment: async function(entry, category) {

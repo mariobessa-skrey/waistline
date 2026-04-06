@@ -116,6 +116,29 @@ app.Group = {
     icon.innerText = "add";
     a.appendChild(icon);
 
+    // Sync button (visible when any integration is enabled)
+    let syncEnabled = app.Settings.get("integration", "health-connect") === true
+      || app.Settings.get("integration", "nightscout-enabled") === true
+      || app.Settings.get("integration", "xdrip-enabled") === true;
+
+    if (syncEnabled) {
+      let syncBtn = document.createElement("div");
+      syncBtn.className = "sync-button";
+      row.appendChild(syncBtn);
+
+      let syncLink = document.createElement("a");
+      syncBtn.appendChild(syncLink);
+
+      let syncIcon = document.createElement("i");
+      syncIcon.className = "icon material-icons ripple";
+      syncIcon.innerText = "sync";
+      syncLink.appendChild(syncIcon);
+
+      syncBtn.addEventListener("click", function(e) {
+        app.Diary.syncMeal(id);
+      });
+    }
+
     //Energy
     const energyUnit = app.Settings.get("units", "energy");
     const energyName = app.Utils.getEnergyUnitName(energyUnit);
