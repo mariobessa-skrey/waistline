@@ -729,6 +729,34 @@ app.Diary = {
     }).open();
   },
 
+  syncMeal: async function(category) {
+    let dateTime = app.Diary.date;
+    let d = new Date(Date.UTC(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate()));
+    let entry = await dbHandler.get("diary", "dateTime", d);
+    if (!entry) return;
+
+    // Build a filtered entry containing only items for this category
+    let filteredEntry = JSON.parse(JSON.stringify(entry));
+    filteredEntry.items = (entry.items || []).filter(function(item) {
+      return (item.category !== undefined ? item.category : 0) === category;
+    });
+
+    if (filteredEntry.items.length === 0) {
+      app.Utils.toast("No items to sync");
+      return;
+    }
+
+    try {
+      app.HealthConnect.syncDiaryEntry(filteredEntry);
+      app.Nightscout.syncMealDirect(filteredEntry, category);
+      app.XDrip.syncMealDirect(filteredEntry, category);
+      app.Utils.toast("Sync sent");
+    } catch (e) {
+      console.error("Sync failed:", e);
+      app.Utils.toast("Sync failed");
+    }
+  },
+
   quickAdd: function(category) {
     let title = app.strings.diary["quick-add"] || "Quick Add";
     let energyUnit = app.Settings.get("units", "energy");

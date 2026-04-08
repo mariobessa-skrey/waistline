@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-xdrip"
+        version="1.0.0">
+
+    <name>xDrip Broadcast</name>
+    <description>Cordova plugin for sending treatment data to xDrip+ via Android broadcast intents</description>
+    <license>GPL-3.0</license>
+
+    <js-module src="www/xdrip.js" name="xdrip">
+        <clobbers target="cordova.plugins.xdrip" />
+    </js-module>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="XDripBroadcast">
+                <param name="android-package" value="com.waistline.xdrip.XDripBroadcastPlugin" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/XDripBroadcastPlugin.kt"
+                     target-dir="src/com/waistline/xdrip" />
+    </platform>
+</plugin>

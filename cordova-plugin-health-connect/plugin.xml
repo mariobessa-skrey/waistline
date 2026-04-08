@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-health-connect"
+        version="1.0.0">
+
+    <name>Health Connect</name>
+    <description>Cordova plugin for writing nutrition data to Android Health Connect</description>
+    <license>GPL-3.0</license>
+
+    <js-module src="www/health-connect.js" name="healthConnect">
+        <clobbers target="cordova.plugins.healthConnect" />
+    </js-module>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="HealthConnect">
+                <param name="android-package" value="com.waistline.healthconnect.HealthConnectPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.health.WRITE_NUTRITION" />
+            <uses-permission android:name="android.permission.health.READ_NUTRITION" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity
+                android:name="com.waistline.healthconnect.HealthConnectPermissionActivity"
+                android:exported="true"
+                android:theme="@style/Theme.AppCompat.Translucent">
+                <intent-filter>
+                    <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+                </intent-filter>
+            </activity>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']" mode="merge">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </config-file>
+
+        <framework src="androidx.health.connect:connect-client:1.1.0-alpha10" />
+
+        <source-file src="src/android/HealthConnectPlugin.kt"
+                     target-dir="src/com/waistline/healthconnect" />
+
+        <resource-file src="src/android/styles_translucent.xml"
+                       target="res/values/styles_translucent.xml" />
+    </platform>
+</plugin>

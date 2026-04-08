@@ -30,5 +30,8 @@
 .page[data-name="diary"] #diary-nutrition.show-values .nutrition-total-remaining {display: none;}
 .page[data-name="diary"] #diary-nutrition.show-remaining .nutrition-total-values {display: none;}
 
+/* Sync button */
+.page[data-name="diary"] .sync-button {padding: 0 8px; cursor: pointer;}
+
 /* Dialog with scrollbar */
 .scroll-dialog {max-height: 64vh; overflow-y: auto;}
